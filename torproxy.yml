@@ -1,0 +1,52 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: torproxy
+spec:
+  strategy:
+    type: Recreate
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: torproxy
+    spec:
+      containers:
+      - name: torproxy
+        image: "k8sutils/torproxy:latest"
+        imagePullPolicy: Always
+        readinessProbe:
+          tcpSocket:
+            port: 9050
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        env:
+        - name: TORUSER
+          value: ""
+        - name: BW
+          value: ""
+        - name: EXITNODE
+          value: ""
+        - name: LOCATION
+          value: ""
+        ports:
+        - name: socks
+          protocol: TCP
+          containerPort: 9050
+===
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: torproxy
+  labels:
+    app: torproxy
+spec:
+  ports:
+  - name: socks
+    port: 80
+    targetPort: 9050
+    protocol: TCP
+  selector:
+    app: torproxy
+  type: LoadBalancer
