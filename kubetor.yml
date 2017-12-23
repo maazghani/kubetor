@@ -13,7 +13,7 @@ spec:
     spec:
       containers:
       - name: torproxy
-        image: "k8sutils/torproxy:latest"
+        image: "k8sutils/kubetor:GITVERSION"
         imagePullPolicy: Always
         readinessProbe:
           tcpSocket:
