@@ -1,0 +1,15 @@
+sudo: required
+
+services:
+  - docker
+
+install:
+  - echo $REPO:COMMIT
+
+script:
+  - docker build -f Dockerfile -t $REPO:$COMMIT .
+
+after_success:
+  - docker login -u $DOCKER_USER -p $DOCKER_PASS
+  - docker push $REPO:$COMMIT
+
