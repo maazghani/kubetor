@@ -4,3 +4,10 @@
 
 
 uses: [torproxy](https://github.com/dperson/torproxy)
+
+## how to
+
+```
+make release ## to deploy
+make use ## to use as HTTP_PROXY
+```
