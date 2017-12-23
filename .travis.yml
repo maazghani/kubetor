@@ -3,7 +3,10 @@ sudo: required
 services:
   - docker
 
-before_install:
+install:
+  - echo $REPO:COMMIT
+
+script:
   - docker build -f Dockerfile -t $REPO:$COMMIT .
 
 after_success:
