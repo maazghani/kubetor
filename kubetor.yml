@@ -53,7 +53,7 @@ metadata:
 spec:
   ports:
   - name: socks
-    port: 80
+    port: 443
     targetPort: 9050
     protocol: TCP
   selector:
