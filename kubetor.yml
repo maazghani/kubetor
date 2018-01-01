@@ -1,19 +1,20 @@
+# ------------------- Deployment ------------------- #
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: torproxy
+  name: kubetor
 spec:
   strategy:
     type: Recreate
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
-        app: torproxy
+        app: kubetor
     spec:
       containers:
-      - name: torproxy
-        image: "k8sutils/kubetor:GITVERSION"
+      - name: kubetor
+        image: "k8sutils/kubetor:v0.1"
         imagePullPolicy: Always
         readinessProbe:
           tcpSocket:
@@ -21,32 +22,40 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
         env:
-        - name: TORUSER
+        - name: TORUSER #If set use named user instead of 'tor' (for example root)
           value: ""
-        - name: BW
+        - name: BW # As above, set a tor relay bandwidth limit in KB, IE 50
           value: ""
-        - name: EXITNODE
+        - name: EXITNODE # As above, allow tor traffic to access the internet from your IP
           value: ""
-        - name: LOCATION
+        - name: LOCATION # As above, configure the country to use for exit node selection
+          value: ""
+        - name: PASSWORD # As above, configure HashedControlPassword for control port 
+          value: ""
+        - name: TZ # Configure the zoneinfo timezone, IE EST5EDT
+          value: ""
+        - name: USERID # Set the UID for the app user
+          value: ""
+        - name: GROUPID # Set the GID for the app user
           value: ""
         ports:
         - name: socks
           protocol: TCP
           containerPort: 9050
-===
-
+---
+# ------------------- Service Load Balancer ------------------- #
 apiVersion: v1
 kind: Service
 metadata:
-  name: torproxy
+  name: kubetor
   labels:
-    app: torproxy
+    app: kubetor
 spec:
   ports:
   - name: socks
-    port: 80
+    port: 443
     targetPort: 9050
     protocol: TCP
   selector:
-    app: torproxy
+    app: kubetor
   type: LoadBalancer
