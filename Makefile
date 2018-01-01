@@ -1,5 +1,6 @@
 .PHONY: up use down
 V=1
+SOCKSIP:=$(shell kubectl get svc kubetor -o jsonpath='{.status.loadBalancer.ingress[].ip}')
 
 up: 
 	VERSION=$(shell git rev-parse --short HEAD)
@@ -7,7 +8,9 @@ up:
 	kubectl apply -f kubetor.yml --record
 
 use:
-	@kubectl get svc kubetor -o jsonpath='{.status.loadBalancer.ingress[].ip}' | pbcopy
+	@echo "For use with shell environment: \n export SOCKS_IP=${SOCKSIP}" 
+	@echo ${SOCKSIP} | pbcopy
+	@echo "Copied to clipboard."
 
 down: 
 	kubectl delete -f kubetor.yml
