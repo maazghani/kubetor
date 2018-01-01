@@ -5,9 +5,18 @@
 
 uses: [torproxy](https://github.com/dperson/torproxy)
 
-## how to
+## usage
 
+### up
 ```
-make release ## to deploy
-make use ## to use as HTTP_PROXY
+make up ## to deploy latest master
+
+make use ## to copy LoadBalancer ingress IP to clipboard
+```
+
+Configure a SOCKS proxy for either your CLI (`curl --socks5-hostname $SOCKS_IP:443 google.com`) or as host system SOCKS5 proxy.
+
+### down
+```
+make down
 ```
