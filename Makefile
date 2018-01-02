@@ -1,10 +1,9 @@
 .PHONY: up use down
 V=1
 SOCKSIP:=$(shell kubectl get svc kubetor -o jsonpath='{.status.loadBalancer.ingress[].ip}')
-
+VERSION:=$(shell git rev-parse --short HEAD)
 up: 
-	VERSION=$(shell git rev-parse --short HEAD)
-	sed -i -- 's/GITVERSION/'"${VERSION}"'/g' kubetor.yml
+	@sed -i -- 's/GITVERSION/'"${VERSION}"'/g' kubetor.yml
 	kubectl apply -f kubetor.yml --record
 
 use:
@@ -14,3 +13,4 @@ use:
 
 down: 
 	kubectl delete -f kubetor.yml
+	@sed -i -- 's/'"${VERSION}"'/GITVERSION/g' kubetor.yml
