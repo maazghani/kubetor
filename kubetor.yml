@@ -5,8 +5,8 @@ metadata:
   name: kubetor
 spec:
   strategy:
-    type: Recreate
-  replicas: 3
+    type: RollingUpdate
+  replicas: 14
   template:
     metadata:
       labels:
@@ -14,12 +14,12 @@ spec:
     spec:
       containers:
       - name: kubetor
-        image: "k8sutils/kubetor:v0.1"
+        image: "k8sutils/kubetor:GITVERSION"
         imagePullPolicy: Always
         readinessProbe:
           tcpSocket:
             port: 9050
-          initialDelaySeconds: 5
+          initialDelaySeconds: 1
           periodSeconds: 10
         env:
         - name: TORUSER #If set use named user instead of 'tor' (for example root)
